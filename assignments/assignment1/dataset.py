@@ -27,7 +27,7 @@ def load_data_mat(filename, max_samples):
 
 
 def load_svhn(folder, max_train, max_test):
-    '''
+    """
     Loads SVHN dataset from file
 
     Arguments:
@@ -38,7 +38,7 @@ def load_svhn(folder, max_train, max_test):
     train_y, np array of int (num_train) - training labels
     test_X, np array (num_test, 32, 32, 3) - test images
     test_y, np array of int (num_test) - test labels
-    '''
+    """
     train_X, train_y = load_data_mat(os.path.join(folder, "train_32x32.mat"), max_train)
     test_X, test_y = load_data_mat(os.path.join(folder, "test_32x32.mat"), max_test)
     return train_X, train_y, test_X, test_y

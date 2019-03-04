@@ -5,6 +5,7 @@ class KNN:
     """
     K-neariest-neighbor classifier using L1 loss
     """
+
     def __init__(self, k=1):
         self.k = k
 
@@ -38,57 +39,60 @@ class KNN:
             return self.predict_labels_multiclass(dists)
 
     def compute_distances_two_loops(self, X):
-        '''
+        """
         Computes distance from every sample of X to every training sample
         Uses simplest implementation with 2 Python loops
 
         Arguments:
         X, np array (num_test_samples, num_features) - samples to run
-        
+
         Returns:
         dists, np array (num_test_samples, num_train_samples) - array
            with distances between each test and each train sample
-        '''
+        """
         num_train = self.train_X.shape[0]
         num_test = X.shape[0]
         dists = np.zeros((num_test, num_train), np.float32)
         for i_test in range(num_test):
             for i_train in range(num_train):
-                # TODO: Fill dists[i_test][i_train]
-                pass
+                dists[i_test, i_train] = np.linalg.norm((X[i_test] - self.train_X[i_train]), ord=1)
+
+        return dists
 
     def compute_distances_one_loop(self, X):
-        '''
+        """
         Computes distance from every sample of X to every training sample
         Vectorizes some of the calculations, so only 1 loop is used
 
         Arguments:
         X, np array (num_test_samples, num_features) - samples to run
-        
+
         Returns:
         dists, np array (num_test_samples, num_train_samples) - array
            with distances between each test and each train sample
-        '''
+        """
         num_train = self.train_X.shape[0]
         num_test = X.shape[0]
         dists = np.zeros((num_test, num_train), np.float32)
+
+        def distance(one_image): return np.linalg.norm((one_image - X[i_test]), ord=1)
         for i_test in range(num_test):
-            # TODO: Fill the whole row of dists[i_test]
-            # without additional loops
-            pass
+            dists[i_test] = np.array([distance(xi) for xi in self.train_X])
+
+        return dists
 
     def compute_distances_no_loops(self, X):
-        '''
+        """
         Computes distance from every sample of X to every training sample
         Fully vectorizes the calculations
 
         Arguments:
         X, np array (num_test_samples, num_features) - samples to run
-        
+
         Returns:
         dists, np array (num_test_samples, num_train_samples) - array
            with distances between each test and each train sample
-        '''
+        """
         num_train = self.train_X.shape[0]
         num_test = X.shape[0]
         # Using float32 to to save memory - the default is float64
