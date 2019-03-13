@@ -1,5 +1,7 @@
+import numpy as np
+
 def binary_classification_metrics(prediction, ground_truth):
-    '''
+    """
     Computes metrics for binary classification
 
     Arguments:
@@ -8,7 +10,7 @@ def binary_classification_metrics(prediction, ground_truth):
 
     Returns:
     precision, recall, accuracy, f1 - classification metrics
-    '''
+    """
     precision = 0
     recall = 0
     accuracy = 0
@@ -18,7 +20,33 @@ def binary_classification_metrics(prediction, ground_truth):
     # Some helpful links:
     # https://en.wikipedia.org/wiki/Precision_and_recall
     # https://en.wikipedia.org/wiki/F1_score
-    
+    tp = 0
+    tn = 0
+    fp = 0
+    fn = 0
+
+    zipped = np.dstack((prediction, ground_truth))
+    for p in np.rollaxis(zipped, 1):
+        pair = p[0]
+        if pair[0]:
+            if pair[1]:
+                tp += 1
+            else:
+                tn += 1
+        else:
+            if pair[1]:
+                fn += 1
+            else:
+                fp += 1
+    # np.apply_along_axis(resolve_case, axis=2, arr=zipped)
+
+    accuracy = (tp + tn) / (tp + tn + fp + fn)
+
+    precision = tp / (tp + fp)
+    recall = tp / (tp + fn)
+
+    f1 = 2 * (precision*recall) / (precision + recall)
+
     return accuracy, precision, recall, f1
 
 

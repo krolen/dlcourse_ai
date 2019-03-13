@@ -120,7 +120,7 @@ class KNN:
             bincount = np.bincount(smallest_vals.astype(int))
             argmax = np.argmax(bincount)
             pred[i] = argmax
-            print(pred[i])
+
         return pred
 
     def predict_labels_multiclass(self, dists):
@@ -136,10 +136,12 @@ class KNN:
            for every test sample
         """
         num_test = dists.shape[0]
-        num_test = dists.shape[0]
         pred = np.zeros(num_test, np.int)
         for i in range(num_test):
-            # TODO: Implement choosing best class based on k
-            # nearest training samples
-            pass
+            smallest_indexes = np.argpartition(dists[i], self.k)
+            smallest_vals = np.take(self.train_y, smallest_indexes[:self.k])
+            bincount = np.bincount(smallest_vals.astype(int))
+            argmax = np.argmax(bincount)
+            pred[i] = argmax
+
         return pred
