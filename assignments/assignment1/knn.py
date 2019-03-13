@@ -14,9 +14,9 @@ class KNN:
         self.train_y = y
 
     def predict(self, X, num_loops=0):
-        '''
+        """
         Uses the KNN model to predict clases for the data samples provided
-        
+
         Arguments:
         X, np array (num_samples, num_features) - samples to run
            through the model
@@ -25,7 +25,7 @@ class KNN:
         Returns:
         predictions, np array of ints (num_samples) - predicted class
            for each sample
-        '''
+        """
         if num_loops == 0:
             dists = self.compute_distances_no_loops(X)
         elif num_loops == 1:
@@ -101,37 +101,40 @@ class KNN:
         return dists
 
     def predict_labels_binary(self, dists):
-        '''
+        """
         Returns model predictions for binary classification case
-        
+
         Arguments:
         dists, np array (num_test_samples, num_train_samples) - array
            with distances between each test and each train sample
 
         Returns:
-        pred, np array of bool (num_test_samples) - binary predictions 
+        pred, np array of bool (num_test_samples) - binary predictions
            for every test sample
-        '''
+        """
         num_test = dists.shape[0]
         pred = np.zeros(num_test, np.bool)
         for i in range(num_test):
-            # TODO: Implement choosing best class based on k
-            # nearest training samples
-            pass
+            smallest_indexes = np.argpartition(dists[i], self.k)
+            smallest_vals = np.take(self.train_y, smallest_indexes[:self.k])
+            bincount = np.bincount(smallest_vals.astype(int))
+            argmax = np.argmax(bincount)
+            pred[i] = argmax
+            print(pred[i])
         return pred
 
     def predict_labels_multiclass(self, dists):
-        '''
+        """
         Returns model predictions for multi-class classification case
-        
+
         Arguments:
         dists, np array (num_test_samples, num_train_samples) - array
            with distances between each test and each train sample
 
         Returns:
-        pred, np array of int (num_test_samples) - predicted class index 
+        pred, np array of int (num_test_samples) - predicted class index
            for every test sample
-        '''
+        """
         num_test = dists.shape[0]
         num_test = dists.shape[0]
         pred = np.zeros(num_test, np.int)
