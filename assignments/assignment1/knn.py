@@ -75,9 +75,11 @@ class KNN:
         num_test = X.shape[0]
         dists = np.zeros((num_test, num_train), np.float32)
 
-        def distance(one_image): return np.linalg.norm((one_image - X[i_test]), ord=1)
+        def one_test_distance(arr1, arr2):
+            return np.linalg.norm((arr1 - arr2), ord=1)
+
         for i_test in range(num_test):
-            dists[i_test] = np.array([distance(xi) for xi in self.train_X])
+            dists[i_test] = np.apply_along_axis(one_test_distance, 1, self.train_X, X[i_test])
 
         return dists
 
@@ -93,12 +95,10 @@ class KNN:
         dists, np array (num_test_samples, num_train_samples) - array
            with distances between each test and each train sample
         """
-        num_train = self.train_X.shape[0]
-        num_test = X.shape[0]
         # Using float32 to to save memory - the default is float64
-        dists = np.zeros((num_test, num_train), np.float32)
-        # TODO: Implement computing all distances with no loops!
-        pass
+        dists = np.linalg.norm((np.expand_dims(X, 1) - np.expand_dims(self.train_X, 0)), ord=1, axis=2)
+
+        return dists
 
     def predict_labels_binary(self, dists):
         '''
