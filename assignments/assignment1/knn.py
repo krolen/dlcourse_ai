@@ -96,7 +96,8 @@ class KNN:
            with distances between each test and each train sample
         """
         # Using float32 to to save memory - the default is float64
-        dists = np.linalg.norm((np.expand_dims(X, 1) - np.expand_dims(self.train_X, 0)), ord=1, axis=2)
+        diff = (np.expand_dims(X, 1) - np.expand_dims(self.train_X, 0))
+        dists = np.linalg.norm(diff, ord=1, axis=2)
 
         return dists
 
