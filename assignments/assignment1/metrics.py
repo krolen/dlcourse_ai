@@ -54,5 +54,12 @@ def multiclass_accuracy(prediction, ground_truth):
     Returns:
     accuracy - ratio of accurate predictions to total samples
     """
-    # TODO: Implement computing accuracy
-    return 0
+    correct = 0
+
+    zipped = np.dstack((prediction, ground_truth))
+    for p in np.rollaxis(zipped, 1):
+        pair = p[0]
+        if pair[0] == pair[1]:
+            correct += 1
+
+    return correct / prediction.shape[0]
